@@ -10,8 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.4.0",
+    "endpoint-client": "^0.1.1",
+    "eslint-prettier-config": "^1.0.1",
+    "prettier": "^2.8.8",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.43.9",
+    "react-query": "^3.39.3",
+    "react-router-dom": "^6.11.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",
@@ -19,7 +26,7 @@
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.57.1",
     "@vitejs/plugin-react": "^4.0.0",
-    "eslint": "^8.38.0",
+    "eslint": "^8.41.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.3.4",
     "typescript": "^5.0.2",
