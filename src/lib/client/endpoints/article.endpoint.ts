@@ -89,7 +89,7 @@ export const PutArticle: Endpoint<PutArticleRequest, PutArticleResponse> = {
 export type DeleteArticleRequest = {
   slug: string
 }
-export type DeleteArticleResponse = {}
+export type DeleteArticleResponse = Record<string, never>
 export const DeleteArticle: Endpoint<DeleteArticleRequest, DeleteArticleResponse> = {
   method: 'DELETE',
   path: (e) => `/api/articles/${e.slug}`,
