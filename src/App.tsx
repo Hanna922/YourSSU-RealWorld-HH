@@ -1,10 +1,11 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
+
+import ArticlePage from './pages/ArticlePage'
+import CreatePage from './pages/CreatePage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage'
-import CreatePage from './pages/CreatePage'
 import SettingsPage from './pages/SettingsPage'
-import ArticlePage from './pages/ArticlePage'
 
 function App() {
   return (

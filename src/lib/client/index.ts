@@ -1,4 +1,5 @@
 import { EndpointClient } from 'endpoint-client'
+
 import {
   GetUser,
   PostUser,
