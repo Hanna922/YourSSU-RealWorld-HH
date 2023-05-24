@@ -36,7 +36,7 @@ export const PostUser: Endpoint<PostUserRequest, PostUserResponse> = {
 }
 
 // GET /api/user
-export type GetUserRequest = {}
+export type GetUserRequest = Record<string, never>
 export type GetUserResponse = {
   user: UserObject
 }
