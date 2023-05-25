@@ -3,7 +3,8 @@ import { useQuery } from 'react-query'
 import { client } from '@/lib/client'
 
 const ArticlePage = () => {
-  const { data } = useQuery(['articles'], () =>
+  const { data } = useQuery(
+    ['articles'],
     client.article.list({
       tag: 'string',
       author: 'string',
