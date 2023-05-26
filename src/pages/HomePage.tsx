@@ -1,7 +1,36 @@
+import { ArticlePreview } from '@/components/ArticlePreview'
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
+import { useUser } from '@/hooks/useUser'
+import { TagObject } from '@/lib/client/objects'
+
+function PopularTags({ tags }: { tags: TagObject[] }) {
+  return (
+    <div className="col-md-3">
+      <div className="sidebar">
+        <p>Popular Tags</p>
+
+        <div className="tag-list">
+          {tags.map((tag) => {
+            return (
+              <a
+                href=""
+                className="tag-pill tag-default"
+                key={tag}
+              >
+                {tag}
+              </a>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const HomePage = () => {
+  const { user, isLogin } = useUser()
+
   return (
     <>
       <Navbar />
@@ -18,14 +47,18 @@ const HomePage = () => {
             <div className="col-md-9">
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
-                  <li className="nav-item">
-                    <a
-                      className="nav-link disabled"
-                      href=""
-                    >
-                      Your Feed
-                    </a>
-                  </li>
+                  {isLogin ? (
+                    <li className="nav-item">
+                      <a
+                        className="nav-link disabled"
+                        href=""
+                      >
+                        Your Feed
+                      </a>
+                    </li>
+                  ) : (
+                    <></>
+                  )}
                   <li className="nav-item">
                     <a
                       className="nav-link active"
@@ -37,119 +70,27 @@ const HomePage = () => {
                 </ul>
               </div>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a
-                      href=""
-                      className="author"
-                    >
-                      Eric Simons
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 29
-                  </button>
-                </div>
-                <a
-                  href=""
-                  className="preview-link"
-                >
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
-
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                  </a>
-                  <div className="info">
-                    <a
-                      href=""
-                      className="author"
-                    >
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 32
-                  </button>
-                </div>
-                <a
-                  href=""
-                  className="preview-link"
-                >
-                  <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+              <ArticlePreview
+                article={{
+                  title: '제목',
+                  slug: '제목',
+                  body: '내용',
+                  author: {
+                    bio: '123',
+                    following: false,
+                    image: '123',
+                    username: '123',
+                  },
+                  createdAt: '123',
+                  description: '123123123',
+                  favorited: false,
+                  favoritesCount: 123,
+                  tagList: ['123'],
+                  updatedAt: '123',
+                }}
+              />
             </div>
-
-            <div className="col-md-3">
-              <div className="sidebar">
-                <p>Popular Tags</p>
-
-                <div className="tag-list">
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    programming
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    javascript
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    emberjs
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    angularjs
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    react
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    mean
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    node
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    rails
-                  </a>
-                </div>
-              </div>
-            </div>
+            <PopularTags tags={['1', '2', '3']} />
           </div>
         </div>
       </div>
