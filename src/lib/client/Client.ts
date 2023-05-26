@@ -1,10 +1,13 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
+import tokenService from '@/services/TokenService'
+
 class Client {
   baseURL: string
 
   headers = {
     'Content-Type': 'application/json',
+    Authorization: `Token ${tokenService.get()}`,
   }
 
   constructor({ baseURL }: { baseURL: string }) {

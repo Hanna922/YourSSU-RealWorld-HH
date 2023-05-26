@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router'
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
 import { postUser } from '@/lib/client/endpoints/user.endpoint'
+import tokenService from '@/services/TokenService'
 
 interface RegiterForm {
   username: string
@@ -22,8 +23,9 @@ const RegisterPage = () => {
   const navigate = useNavigate()
 
   const { mutate } = useMutation(postUser, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       setErrorMessages([])
+      tokenService.set(data.user.token)
       navigate('/')
     },
     onError: (error) => {

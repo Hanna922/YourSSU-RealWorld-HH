@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router'
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
 import { postUserLogin } from '@/lib/client/endpoints/user.endpoint'
+import tokenService from '@/services/TokenService'
 
 interface LoginForm {
   email: string
@@ -21,8 +22,9 @@ const LoginPage = () => {
   const navigate = useNavigate()
 
   const { mutate } = useMutation(postUserLogin, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       setErrorMessages([])
+      tokenService.set(data.user.token)
       navigate('/')
     },
     onError: (error) => {
