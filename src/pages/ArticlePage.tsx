@@ -1,7 +1,22 @@
-import { Footer } from '@/components/Footer'
-import { Navbar } from '@/components/Navbar'
+import { useQuery } from 'react-query'
+
+import { client } from '@/lib/client'
+
+import { Footer } from './../components/Footer'
+import { Navbar } from './../components/Navbar'
 
 const ArticlePage = () => {
+  const { data } = useQuery(
+    ['articles'],
+    client.article.list({
+      tag: 'string',
+      author: 'string',
+      favorited: 'string',
+      limit: 3,
+      offset: 3,
+    })
+  )
+
   return (
     <>
       <Navbar />
@@ -150,6 +165,12 @@ const ArticlePage = () => {
         </div>
       </div>
       <Footer />
+      {/* {data?.articles.map((article) => (
+        <div key={article.slug}>
+          <h1>{article.title}</h1>
+          <p>{article.description}</p>
+        </div>
+      ))} */}
     </>
   )
 }

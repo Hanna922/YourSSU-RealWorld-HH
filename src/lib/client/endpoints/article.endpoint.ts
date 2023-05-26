@@ -1,9 +1,11 @@
 import { Endpoint } from 'endpoint-client'
 
+import Client from '@/services/Client'
+
 import { ArticleObject } from '../objects'
 
 // GET /api/articles
-export type GetArticlesRequest = {
+export type GetArticlesRequestPayload = {
   tag?: string
   author?: string
   favorited?: string
@@ -14,10 +16,9 @@ export type GetArticlesResponse = {
   articles: ArticleObject[]
   articlesCount: number
 }
-export const GetArticles: Endpoint<GetArticlesRequest, GetArticlesResponse> = {
-  method: 'GET',
-  path: '/api/articles',
-  queryParams: ['tag', 'author', 'favorited', 'limit', 'offset'],
+
+export function getArticles(params: GetArticlesRequestPayload) {
+  return Client.get<GetArticlesResponse>('/api/articles', { params })
 }
 
 // GET /api/articles/feed
@@ -89,7 +90,7 @@ export const PutArticle: Endpoint<PutArticleRequest, PutArticleResponse> = {
 export type DeleteArticleRequest = {
   slug: string
 }
-export type DeleteArticleResponse = Record<string, never>
+export type DeleteArticleResponse = {}
 export const DeleteArticle: Endpoint<DeleteArticleRequest, DeleteArticleResponse> = {
   method: 'DELETE',
   path: (e) => `/api/articles/${e.slug}`,
