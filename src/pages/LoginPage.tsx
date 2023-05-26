@@ -29,11 +29,9 @@ const LoginPage = () => {
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
-        if (error.response?.status === 422) {
-          setErrorMessages(
-            Object.entries(error.response.data.errors).map(([key, value]) => `${key} ${value}`)
-          )
-        }
+        setErrorMessages(
+          Object.entries(error.response?.data.errors).map(([key, value]) => `${key} ${value}`)
+        )
       }
     },
   })
