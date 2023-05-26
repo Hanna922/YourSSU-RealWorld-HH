@@ -1,9 +1,10 @@
 import { Endpoint } from 'endpoint-client'
 
+import Client from '@/services/Client'
+
 import { CommentObject } from '../objects'
 
-// POST /api/articles/:slug/comments
-export type PostArticleCommentRequest = {
+export type PostArticleCommentPayload = {
   slug: string
   comment: {
     body: string
@@ -12,11 +13,11 @@ export type PostArticleCommentRequest = {
 export type PostArticleCommentResponse = {
   comment: CommentObject
 }
-export const PostArticleComment: Endpoint<PostArticleCommentRequest, PostArticleCommentResponse> = {
-  method: 'POST',
-  path: (e) => `/api/articles/${e.slug}/comments`,
-  bodyParams: ['comment'],
-  pathParams: ['slug'],
+
+export function postArticleComment({ slug, comment }: PostArticleCommentPayload) {
+  return Client.post<PostArticleCommentResponse>(`/api/articles/${slug}/comments`, {
+    comment,
+  })
 }
 
 // GET /api/articles/:slug/comments

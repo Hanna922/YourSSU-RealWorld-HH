@@ -8,14 +8,14 @@ import {
   GetProfile,
   PostProfileFollow,
   DeleteProfileFollow,
-  GetArticles,
+  getArticles,
   GetArticle,
   GetArticleFeed,
   PostArticle,
   PutArticle,
   DeleteArticle,
   GetArticleComments,
-  PostArticleComment,
+  postArticleComment,
   DeleteArticleComment,
   PostArticleFavorite,
   DeleteArticleFavorite,
@@ -37,14 +37,14 @@ export class Client extends EndpointClient {
   }
   readonly article = {
     get: this.endpointBuilder(GetArticle),
-    list: this.endpointBuilder(GetArticles),
+    list: getArticles,
     feed: this.endpointBuilder(GetArticleFeed),
     post: this.endpointBuilder(PostArticle),
     put: this.endpointBuilder(PutArticle),
     delete: this.endpointBuilder(DeleteArticle),
     commnet: {
       list: this.endpointBuilder(GetArticleComments),
-      post: this.endpointBuilder(PostArticleComment),
+      post: postArticleComment,
       delete: this.endpointBuilder(DeleteArticleComment),
     },
     favorite: {
