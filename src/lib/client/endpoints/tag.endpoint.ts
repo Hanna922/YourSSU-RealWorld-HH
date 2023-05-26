@@ -1,4 +1,4 @@
-import { Endpoint } from 'endpoint-client'
+import Client from '@/lib/client/Client'
 
 import { TagObject } from '../objects'
 
@@ -7,7 +7,6 @@ export type GetTagsRequest = Record<string, never>
 export type GetTagsResponse = {
   tags: TagObject[]
 }
-export const GetTags: Endpoint<GetTagsRequest, GetTagsResponse> = {
-  method: 'GET',
-  path: '/api/tags',
+export function getTags() {
+  return Client.get<GetTagsResponse>('/api/tags')
 }

@@ -1,4 +1,4 @@
-import { Endpoint } from 'endpoint-client'
+import Client from '@/lib/client/Client'
 
 import { UserObject } from '../objects'
 
@@ -12,10 +12,8 @@ export type PostUserLoginRequest = {
 export type PostUserLoginResponse = {
   user: UserObject
 }
-export const PostUserLogin: Endpoint<PostUserLoginRequest, PostUserLoginResponse> = {
-  method: 'POST',
-  path: '/api/user/login',
-  bodyParams: ['user'],
+export function postUserLogin({ user }: PostUserLoginRequest) {
+  return Client.post<PostUserLoginResponse>('/api/users/login', { user })
 }
 
 // POST /api/users
@@ -29,10 +27,8 @@ export type PostUserRequest = {
 export type PostUserResponse = {
   user: UserObject
 }
-export const PostUser: Endpoint<PostUserRequest, PostUserResponse> = {
-  method: 'POST',
-  path: '/api/user',
-  bodyParams: ['user'],
+export function postUser({ user }: PostUserRequest) {
+  return Client.post<PostUserResponse>('/api/users', { user })
 }
 
 // GET /api/user
@@ -40,9 +36,8 @@ export type GetUserRequest = Record<string, never>
 export type GetUserResponse = {
   user: UserObject
 }
-export const GetUser: Endpoint<GetUserRequest, GetUserResponse> = {
-  method: 'GET',
-  path: '/api/user',
+export function getUser() {
+  return Client.get<GetUserResponse>('/api/user')
 }
 
 // PUT /api/user
@@ -56,8 +51,6 @@ export type PutUserRequest = {
 export type PutUserResponse = {
   user: UserObject
 }
-export const PutUser: Endpoint<PutUserRequest, PutUserResponse> = {
-  method: 'PUT',
-  path: '/api/user',
-  bodyParams: ['user'],
+export function putUser({ user }: PutUserRequest) {
+  return Client.put<PutUserResponse>('/api/user', { user })
 }

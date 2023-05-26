@@ -1,4 +1,4 @@
-import { Endpoint } from 'endpoint-client'
+import Client from '@/lib/client/Client'
 
 import { ArticleObject } from '../objects'
 
@@ -9,13 +9,8 @@ export type PostArticleFavoriteRequest = {
 export type PostArticleFavoriteResponse = {
   article: ArticleObject
 }
-export const PostArticleFavorite: Endpoint<
-  PostArticleFavoriteRequest,
-  PostArticleFavoriteResponse
-> = {
-  method: 'POST',
-  path: (p) => `/api/articles/${p.slug}/favorite`,
-  pathParams: ['slug'],
+export function postArticleFavorite({ slug }: PostArticleFavoriteRequest) {
+  return Client.post<PostArticleFavoriteResponse>(`/api/articles/${slug}/favorite`)
 }
 
 // DELETE /api/articles/:slug/favorite
@@ -25,11 +20,6 @@ export type DeleteArticleFavoriteRequest = {
 export type DeleteArticleFavoriteResponse = {
   article: ArticleObject
 }
-export const DeleteArticleFavorite: Endpoint<
-  DeleteArticleFavoriteRequest,
-  DeleteArticleFavoriteResponse
-> = {
-  method: 'DELETE',
-  path: (p) => `/api/articles/${p.slug}/favorite`,
-  pathParams: ['slug'],
+export function deleteArticleFavorite({ slug }: DeleteArticleFavoriteRequest) {
+  return Client.delete<DeleteArticleFavoriteResponse>(`/api/articles/${slug}/favorite`)
 }

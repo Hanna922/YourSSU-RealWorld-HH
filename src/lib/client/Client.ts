@@ -31,8 +31,28 @@ class Client {
       return response.data
     }
   }
+
+  put<T, D = any>(path: string, data?: D, config?: AxiosRequestConfig) {
+    return async () => {
+      const response = await axios.put<T>(this.baseURL + path, data, {
+        ...config,
+        headers: this.headers,
+      })
+      return response.data
+    }
+  }
+
+  delete<T>(path: string, config?: AxiosRequestConfig) {
+    return async () => {
+      const response = await axios.delete<T>(this.baseURL + path, {
+        ...config,
+        headers: this.headers,
+      })
+      return response.data
+    }
+  }
 }
 
 export default new Client({
-  baseURL: 'https://test.soomsil.de',
+  baseURL: import.meta.env.VITE_API_SERVER,
 })
