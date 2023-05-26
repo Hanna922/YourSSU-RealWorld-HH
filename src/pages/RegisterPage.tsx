@@ -3,25 +3,28 @@ import { useState } from 'react'
 import { AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import { useMutation } from 'react-query'
+import { useNavigate } from 'react-router'
 
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
 import { postUser } from '@/lib/client/endpoints/user.endpoint'
 
-interface IFormData {
+interface RegiterForm {
   username: string
   email: string
   password: string
 }
 
 const RegisterPage = () => {
-  const { handleSubmit, register } = useForm<IFormData>({})
+  const { handleSubmit, register } = useForm<RegiterForm>({})
 
   const [errorMessages, setErrorMessages] = useState<string[]>([])
+  const navigate = useNavigate()
 
   const { mutate } = useMutation(postUser, {
     onSuccess: () => {
       setErrorMessages([])
+      navigate('/')
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
@@ -34,7 +37,7 @@ const RegisterPage = () => {
     },
   })
 
-  const submit = async (data: IFormData) => {
+  const submit = async (data: RegiterForm) => {
     mutate({
       user: {
         username: data.username,
