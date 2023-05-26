@@ -1,22 +1,7 @@
-import { useQuery } from 'react-query'
-
-import { client } from '@/lib/client'
-
 import { Footer } from './../components/Footer'
 import { Navbar } from './../components/Navbar'
 
 const ArticlePage = () => {
-  const { data } = useQuery(
-    ['articles'],
-    client.article.list({
-      tag: 'string',
-      author: 'string',
-      favorited: 'string',
-      limit: 3,
-      offset: 3,
-    })
-  )
-
   return (
     <>
       <Navbar />
