@@ -6,6 +6,10 @@ class TokenService {
   get() {
     return localStorage.getItem('accessToken')
   }
+
+  remove() {
+    localStorage.removeItem('accessToken')
+  }
 }
 
 const tokenService = new TokenService()
