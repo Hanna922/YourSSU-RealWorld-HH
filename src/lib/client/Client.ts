@@ -4,10 +4,15 @@ import tokenService from '@/services/TokenService'
 
 class Client {
   baseURL: string
+  token: string = tokenService.get() || ''
+
+  updateToken(token: string) {
+    this.token = token
+  }
 
   headers = {
     'Content-Type': 'application/json',
-    Authorization: `Token ${tokenService.get()}`,
+    Authorization: `Token ${this.token}`,
   }
 
   constructor({ baseURL }: { baseURL: string }) {

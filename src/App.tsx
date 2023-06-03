@@ -1,3 +1,4 @@
+import { ReactQueryDevtools } from 'react-query/devtools'
 import { BrowserRouter } from 'react-router-dom'
 import { RecoilRoot } from 'recoil'
 
@@ -11,6 +12,11 @@ function App() {
           <IndexRouter />
         </BrowserRouter>
       </RecoilRoot>
+
+      <ReactQueryDevtools
+        initialIsOpen={false}
+        position="bottom-right"
+      />
     </div>
   )
 }
