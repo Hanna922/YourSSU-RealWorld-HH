@@ -1,4 +1,8 @@
+import { useNavigate } from 'react-router-dom'
+
 export const Navbar = () => {
+  const navigate = useNavigate()
+
   return (
     <nav className="navbar navbar-light">
       <div className="container">
@@ -9,7 +13,10 @@ export const Navbar = () => {
           conduit
         </a>
         <ul className="nav navbar-nav pull-xs-right">
-          <li className="nav-item">
+          <li
+            className="nav-item"
+            onClick={() => navigate('/')}
+          >
             <a
               className="nav-link active"
               href=""
@@ -21,6 +28,7 @@ export const Navbar = () => {
             <a
               className="nav-link"
               href=""
+              onClick={() => navigate('/create')}
             >
               {' '}
               <i className="ion-compose"></i>&nbsp;New Article{' '}
@@ -30,6 +38,7 @@ export const Navbar = () => {
             <a
               className="nav-link"
               href=""
+              onClick={() => navigate('/settings')}
             >
               {' '}
               <i className="ion-gear-a"></i>&nbsp;Settings{' '}
@@ -39,6 +48,7 @@ export const Navbar = () => {
             <a
               className="nav-link"
               href=""
+              onClick={() => navigate('/login')}
             >
               Sign in
             </a>
@@ -47,6 +57,7 @@ export const Navbar = () => {
             <a
               className="nav-link"
               href=""
+              onClick={() => navigate('/register')}
             >
               Sign up
             </a>
