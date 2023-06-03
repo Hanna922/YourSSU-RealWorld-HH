@@ -5,17 +5,13 @@ import tokenService from '@/services/TokenService'
 
 export const useUser = () => {
   const { data, isLoading } = useQuery(['user'], getUser, {
-    onSuccess: (data) => {
-      console.log(data)
-    },
-    onError: (error) => {
-      console.log(error)
-    },
+    onSuccess: (data) => {},
+    onError: (error) => {},
     enabled: tokenService.get() !== null,
   })
 
   return {
-    user: data,
+    user: data?.user,
     isLoading,
     isLogin: tokenService.get() !== null,
     logout: () => tokenService.remove(),

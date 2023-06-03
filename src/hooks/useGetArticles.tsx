@@ -10,11 +10,7 @@ export const useGetArticles = (params: {
   offset?: number
 }) => {
   return useQuery<GetArticlesResponse>(['article'], () => getArticles(params), {
-    onSuccess: (data) => {
-      console.log(data)
-    },
-    onError: (error) => {
-      console.log(error)
-    },
+    onSuccess: (data) => {},
+    onError: (error) => {},
   })
 }

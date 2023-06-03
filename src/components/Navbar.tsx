@@ -91,9 +91,9 @@ export const Navbar = () => {
                 {' '}
                 <img
                   className="user-pic"
-                  src={user?.user.image}
+                  src={user?.image}
                 />
-                {user?.user.username}
+                {user?.username}
               </a>
             </li>
           ) : (
