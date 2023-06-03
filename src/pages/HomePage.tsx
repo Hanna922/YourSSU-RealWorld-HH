@@ -3,6 +3,7 @@ import { useRecoilState } from 'recoil'
 import { ArticlePreview } from '@/components/ArticlePreview'
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
+import { useGetArticles } from '@/hooks/useGetArticles'
 import { useUser } from '@/hooks/useUser'
 import { TagObject } from '@/lib/client/objects'
 import { homePageTagState } from '@/state/homePageTag.state'
@@ -41,6 +42,7 @@ function PopularTags({ tags }: { tags: TagObject[] }) {
 
 const HomePage = () => {
   const { user, isLogin } = useUser()
+  // const { data, isLoading } = useGetArticles()
 
   return (
     <>
@@ -83,7 +85,7 @@ const HomePage = () => {
 
               <ArticlePreview
                 article={{
-                  title: '제목',
+                  title: '{data.title}',
                   slug: '제목',
                   body: '내용',
                   author: {
