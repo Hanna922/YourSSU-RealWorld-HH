@@ -9,8 +9,12 @@ export const useGetArticles = (params: {
   limit?: number
   offset?: number
 }) => {
-  return useQuery<GetArticlesResponse>(['article'], () => getArticles(params), {
+  const { data } = useQuery<GetArticlesResponse>(['article'], () => getArticles(params), {
     onSuccess: (data) => {},
     onError: (error) => {},
   })
+
+  return {
+    articles: data?.articles,
+  }
 }
