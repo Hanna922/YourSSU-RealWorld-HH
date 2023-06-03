@@ -1,10 +1,20 @@
+import { useRecoilState } from 'recoil'
+
 import { ArticlePreview } from '@/components/ArticlePreview'
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
 import { useUser } from '@/hooks/useUser'
 import { TagObject } from '@/lib/client/objects'
+import { homePageTagState } from '@/state/homePageTag.state'
 
 function PopularTags({ tags }: { tags: TagObject[] }) {
+  const [, setHomePageTag] = useRecoilState(homePageTagState)
+
+  const tagClickHandler = (e: React.MouseEvent<HTMLAnchorElement>, tag: string) => {
+    e.preventDefault()
+    setHomePageTag(tag)
+  }
+
   return (
     <div className="col-md-3">
       <div className="sidebar">
@@ -17,6 +27,7 @@ function PopularTags({ tags }: { tags: TagObject[] }) {
                 href=""
                 className="tag-pill tag-default"
                 key={tag}
+                onClick={(e) => tagClickHandler(e, tag)}
               >
                 {tag}
               </a>
