@@ -46,6 +46,8 @@ export type PutUserRequest = {
     email?: string
     password?: string
     image?: string
+    username?: string
+    bio?: string
   }
 }
 export type PutUserResponse = {
