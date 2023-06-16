@@ -7,6 +7,7 @@ import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
 import { Pagination } from '@/components/pagination/Pagination'
 import { useGetArticles } from '@/hooks/useGetArticles'
+import { useGetTags } from '@/hooks/useGetTags'
 import { useUser } from '@/hooks/useUser'
 import { TagObject } from '@/lib/client/objects'
 import { homePageTagState } from '@/state/homePageTag.state'
@@ -53,6 +54,7 @@ const HomePage = () => {
     offset: (page - 1) * 10,
     favorited: feedMode === 'your' ? user?.username : undefined,
   })
+  const { tags } = useGetTags()
 
   const switchFeedMode = (e: React.MouseEvent<HTMLAnchorElement>, mode: 'your' | 'global') => {
     e.preventDefault()
@@ -136,7 +138,7 @@ const HomePage = () => {
                 <></>
               )}
             </div>
-            <PopularTags tags={['1', '2', '3']} />
+            <PopularTags tags={tags} />
           </div>
         </div>
       </div>

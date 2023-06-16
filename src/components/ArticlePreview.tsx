@@ -29,6 +29,16 @@ export function ArticlePreview({ article }: { article: ArticleObject }) {
         <h1>{article.title}</h1>
         <p>{article.description}</p>
         <span>Read more...</span>
+        <ul className="tag-list">
+          {article.tagList.map((tag) => (
+            <li
+              key={tag}
+              className="tag-default tag-pill tag-outline ng-binding ng-scope"
+            >
+              {tag}
+            </li>
+          ))}
+        </ul>
       </Link>
     </div>
   )
