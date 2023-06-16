@@ -1,13 +1,15 @@
 const Pagination = ({
   totalPages,
+  limit,
   currentPage,
   setPage,
 }: {
   totalPages: number
+  limit: number
   currentPage: number
   setPage: (page: number) => void
 }) => {
-  if (totalPages <= 5) {
+  if (totalPages <= limit) {
     return <></>
   }
 
@@ -20,7 +22,7 @@ const Pagination = ({
     <>
       <nav>
         <ul className="pagination">
-          {new Array(Math.floor(totalPages / 5) + 1).fill(0).map((_, index) => (
+          {new Array(Math.floor(totalPages / limit) + 1).fill(0).map((_, index) => (
             <li
               className={`page-item ng-scope ${currentPage === index + 1 ? 'active' : ''}`}
               key={index}
