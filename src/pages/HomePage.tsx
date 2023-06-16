@@ -12,11 +12,18 @@ import { useUser } from '@/hooks/useUser'
 import { TagObject } from '@/lib/client/objects'
 import { homePageTagState } from '@/state/homePageTag.state'
 
-function PopularTags({ tags }: { tags: TagObject[] }) {
+function PopularTags({
+  tags,
+  switchFeedMode,
+}: {
+  tags: TagObject[]
+  switchFeedMode: (mode: 'your' | 'global' | 'tag') => void
+}) {
   const [, setHomePageTag] = useRecoilState(homePageTagState)
 
   const tagClickHandler = (e: React.MouseEvent<HTMLAnchorElement>, tag: string) => {
     e.preventDefault()
+    switchFeedMode('tag')
     setHomePageTag(tag)
   }
 
@@ -48,15 +55,20 @@ const HomePage = () => {
   const { user, isLogin } = useUser()
   const [page, setPage] = useState(1)
 
-  const [feedMode, setFeedMode] = useState<'your' | 'global'>('global')
+  const [feedMode, setFeedMode] = useState<'your' | 'global' | 'tag'>('global')
+  const { tags } = useGetTags()
+  const [selectTag, setSelectTag] = useRecoilState(homePageTagState)
   const { articles, articlesCount } = useGetArticles({
     limit: 10,
     offset: (page - 1) * 10,
     favorited: feedMode === 'your' ? user?.username : undefined,
+    tag: feedMode === 'tag' ? selectTag : undefined,
   })
-  const { tags } = useGetTags()
 
-  const switchFeedMode = (e: React.MouseEvent<HTMLAnchorElement>, mode: 'your' | 'global') => {
+  const switchFeedMode = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    mode: 'your' | 'global' | 'tag'
+  ) => {
     e.preventDefault()
     setFeedMode(mode)
   }
@@ -99,6 +111,19 @@ const HomePage = () => {
                       Global Feed
                     </a>
                   </li>
+                  {selectTag ? (
+                    <li className="nav-item">
+                      <a
+                        className={`nav-link ${feedMode === 'tag' ? 'active' : ''}`}
+                        href=""
+                        onClick={(e) => switchFeedMode(e, 'tag')}
+                      >
+                        #{selectTag}
+                      </a>
+                    </li>
+                  ) : (
+                    <></>
+                  )}
                 </ul>
               </div>
               {articles ? (
@@ -138,7 +163,13 @@ const HomePage = () => {
                 <></>
               )}
             </div>
-            <PopularTags tags={tags} />
+            <PopularTags
+              tags={tags}
+              switchFeedMode={(mode) => {
+                setFeedMode(mode)
+                setSelectTag('')
+              }}
+            />
           </div>
         </div>
       </div>
