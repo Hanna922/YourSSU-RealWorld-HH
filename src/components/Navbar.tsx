@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { useUser } from '@/hooks/useUser'
 
@@ -9,48 +9,46 @@ export const Navbar = () => {
   return (
     <nav className="navbar navbar-light">
       <div className="container">
-        <a
+        <Link
           className="navbar-brand"
-          href="index.html"
+          to="/"
         >
           conduit
-        </a>
+        </Link>
         <ul className="nav navbar-nav pull-xs-right">
           <li
             className="nav-item"
             onClick={() => navigate('/')}
           >
-            <a
+            <Link
               className="nav-link active"
-              href=""
+              to="/"
             >
               Home
-            </a>
+            </Link>
           </li>
           {isLogin ? (
             <li className="nav-item">
-              <a
+              <Link
                 className="nav-link"
-                href=""
-                onClick={() => navigate('/create')}
+                to="/create"
               >
                 {' '}
                 <i className="ion-compose"></i>&nbsp;New Article{' '}
-              </a>
+              </Link>
             </li>
           ) : (
             <></>
           )}
           {isLogin ? (
             <li className="nav-item">
-              <a
+              <Link
                 className="nav-link"
-                href=""
-                onClick={() => navigate('/settings')}
+                to="/settings"
               >
                 {' '}
                 <i className="ion-gear-a"></i>&nbsp;Settings{' '}
-              </a>
+              </Link>
             </li>
           ) : (
             <></>
@@ -59,34 +57,31 @@ export const Navbar = () => {
             <></>
           ) : (
             <li className="nav-item">
-              <a
+              <Link
                 className="nav-link"
-                href=""
-                onClick={() => navigate('/login')}
+                to="/login"
               >
                 Sign in
-              </a>
+              </Link>
             </li>
           )}
           {isLogin ? (
             <></>
           ) : (
             <li className="nav-item">
-              <a
+              <Link
                 className="nav-link"
-                href=""
-                onClick={() => navigate('/register')}
+                to="/register"
               >
                 Sign up
-              </a>
+              </Link>
             </li>
           )}
           {isLogin ? (
             <li className="nav-item">
-              <a
+              <Link
                 className="nav-link"
-                href=""
-                onClick={() => navigate('/profile')}
+                to={`/@${user?.username}`}
               >
                 {' '}
                 <img
@@ -94,7 +89,7 @@ export const Navbar = () => {
                   src={user?.image}
                 />
                 {user?.username}
-              </a>
+              </Link>
             </li>
           ) : (
             <></>
