@@ -1,8 +1,11 @@
+import { useState } from 'react'
+
 import { useRecoilState } from 'recoil'
 
 import { ArticlePreview } from '@/components/ArticlePreview'
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
+import Pagination from '@/components/pagination/Pagination'
 import { useGetArticles } from '@/hooks/useGetArticles'
 import { useUser } from '@/hooks/useUser'
 import { TagObject } from '@/lib/client/objects'
@@ -42,7 +45,8 @@ function PopularTags({ tags }: { tags: TagObject[] }) {
 
 const HomePage = () => {
   const { user, isLogin } = useUser()
-  // const { data, isLoading } = useGetArticles()
+  const [page, setPage] = useState(1)
+  const { articles, articlesCount } = useGetArticles({ limit: 10, offset: (page - 1) * 10 })
 
   return (
     <>
@@ -82,26 +86,37 @@ const HomePage = () => {
                   </li>
                 </ul>
               </div>
-
-              <ArticlePreview
-                article={{
-                  title: '{data.title}',
-                  slug: '제목',
-                  body: '내용',
-                  author: {
-                    bio: '123',
-                    following: false,
-                    image: '123',
-                    username: '123',
-                  },
-                  createdAt: '123',
-                  description: '123123123',
-                  favorited: false,
-                  favoritesCount: 123,
-                  tagList: ['123'],
-                  updatedAt: '123',
-                }}
-              />
+              {articles &&
+                articles.map((article) => (
+                  <ArticlePreview
+                    key={article.slug}
+                    article={{
+                      title: article.title,
+                      slug: article.slug,
+                      body: article.body,
+                      author: {
+                        bio: article.author.bio,
+                        following: article.author.following,
+                        image: article.author.image,
+                        username: article.author.username,
+                      },
+                      createdAt: article.createdAt,
+                      description: article.description,
+                      favorited: article.favorited,
+                      favoritesCount: article.favoritesCount,
+                      tagList: article.tagList,
+                      updatedAt: article.updatedAt,
+                    }}
+                  />
+                ))}
+              {articlesCount && (
+                <Pagination
+                  totalPages={articlesCount}
+                  limit={10}
+                  currentPage={page}
+                  setPage={setPage}
+                />
+              )}
             </div>
             <PopularTags tags={['1', '2', '3']} />
           </div>
