@@ -24,10 +24,6 @@ export const IndexRouter = () => {
         element={<RegisterPage />}
       />
       <Route
-        path="/profile"
-        element={<ProfilePage />}
-      />
-      <Route
         path="/create"
         element={<CreatePage />}
       />
@@ -38,6 +34,10 @@ export const IndexRouter = () => {
       <Route
         path="/article"
         element={<ArticlePage />}
+      />
+      <Route
+        path="/:userName"
+        element={<ProfilePage />}
       />
     </Routes>
   )
