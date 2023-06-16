@@ -8,8 +8,6 @@ export const useUser = (options?: { needLogin: boolean }) => {
   const navigate = useNavigate()
 
   const { data, isLoading } = useQuery(['user'], getUser, {
-    onSuccess: (data) => {},
-    onError: (error) => {},
     enabled: tokenService.get() !== null,
   })
 
