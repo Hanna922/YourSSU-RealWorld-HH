@@ -1,4 +1,4 @@
-const Pagination = ({
+export const Pagination = ({
   totalPages,
   limit,
   currentPage,
@@ -41,5 +41,3 @@ const Pagination = ({
     </>
   )
 }
-
-export default Pagination
