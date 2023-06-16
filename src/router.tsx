@@ -32,7 +32,7 @@ export const IndexRouter = () => {
         element={<SettingsPage />}
       />
       <Route
-        path="/article"
+        path="/article/:slug"
         element={<ArticlePage />}
       />
       <Route
