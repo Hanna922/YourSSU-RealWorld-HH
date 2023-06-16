@@ -20,5 +20,6 @@ export const useGetArticles = (params: {
 
   return {
     articles: data?.articles,
+    articlesCount: data?.articlesCount,
   }
 }
