@@ -46,7 +46,18 @@ function PopularTags({ tags }: { tags: TagObject[] }) {
 const HomePage = () => {
   const { user, isLogin } = useUser()
   const [page, setPage] = useState(1)
-  const { articles, articlesCount } = useGetArticles({ limit: 10, offset: (page - 1) * 10 })
+
+  const [feedMode, setFeedMode] = useState<'your' | 'global'>('global')
+  const { articles, articlesCount } = useGetArticles({
+    limit: 10,
+    offset: (page - 1) * 10,
+    favorited: feedMode === 'your' ? user?.username : undefined,
+  })
+
+  const switchFeedMode = (e: React.MouseEvent<HTMLAnchorElement>, mode: 'your' | 'global') => {
+    e.preventDefault()
+    setFeedMode(mode)
+  }
 
   return (
     <>
@@ -67,8 +78,9 @@ const HomePage = () => {
                   {isLogin ? (
                     <li className="nav-item">
                       <a
-                        className="nav-link disabled"
+                        className={`nav-link ${feedMode === 'your' ? 'active' : ''}`}
                         href=""
+                        onClick={(e) => switchFeedMode(e, 'your')}
                       >
                         Your Feed
                       </a>
@@ -78,15 +90,16 @@ const HomePage = () => {
                   )}
                   <li className="nav-item">
                     <a
-                      className="nav-link active"
+                      className={`nav-link ${feedMode === 'global' ? 'active' : ''}`}
                       href=""
+                      onClick={(e) => switchFeedMode(e, 'global')}
                     >
                       Global Feed
                     </a>
                   </li>
                 </ul>
               </div>
-              {articles &&
+              {articles ? (
                 articles.map((article) => (
                   <ArticlePreview
                     key={article.slug}
@@ -108,14 +121,19 @@ const HomePage = () => {
                       updatedAt: article.updatedAt,
                     }}
                   />
-                ))}
-              {articlesCount && (
+                ))
+              ) : (
+                <></>
+              )}
+              {articlesCount ? (
                 <Pagination
                   totalPages={articlesCount}
                   limit={10}
                   currentPage={page}
                   setPage={setPage}
                 />
+              ) : (
+                <></>
               )}
             </div>
             <PopularTags tags={['1', '2', '3']} />
