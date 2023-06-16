@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { useQuery } from 'react-query'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 import { ArticlePreview } from '@/components/ArticlePreview'
 import { Footer } from '@/components/Footer'
@@ -9,7 +9,6 @@ import { Navbar } from '@/components/Navbar'
 import { Pagination } from '@/components/pagination/Pagination'
 import { useGetArticles } from '@/hooks/useGetArticles'
 import { useUser } from '@/hooks/useUser'
-import { getArticles } from '@/lib/client/endpoints/article.endpoint'
 import { getProfile } from '@/lib/client/endpoints/profile.endpoint'
 import { ProfileObject } from '@/lib/client/objects'
 
@@ -35,15 +34,18 @@ const UserInfo = ({ profile }: { profile: ProfileObject }) => {
             <h4>{profile.username}</h4>
             <p>{profile.bio}</p>
             {user?.username === profile.username ? (
-              <button className="btn btn-sm btn-outline-secondary action-btn">
+              <Link
+                className="btn btn-sm btn-outline-secondary action-btn"
+                to="/settings"
+              >
                 <i className="ion-plus-round"></i>
                 &nbsp; Edit Profile Settings
-              </button>
+              </Link>
             ) : (
-              <button className="btn btn-sm btn-outline-secondary action-btn">
+              <a className="btn btn-sm btn-outline-secondary action-btn">
                 <i className="ion-plus-round"></i>
                 &nbsp; Follow {profile.username}
-              </button>
+              </a>
             )}
           </div>
         </div>
