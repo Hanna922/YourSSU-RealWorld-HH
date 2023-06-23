@@ -1,76 +1,31 @@
-import { Footer } from './../components/Footer'
-import { Navbar } from './../components/Navbar'
+import { useQuery } from 'react-query'
+import { useParams } from 'react-router-dom'
+
+import { Footer } from '@/components/Footer'
+import { Navbar } from '@/components/Navbar'
+
+import { ArticleActions } from './components/Actions'
+import { ArticleBanner } from './components/Banner'
+import { ArticleContent } from './components/Content'
+import { getArticleQuery } from './queries/getArticleQuery'
 
 const ArticlePage = () => {
+  const { slug: _slug } = useParams<{ slug: string }>()
+  const slug = _slug || ''
+
+  const { data: article } = useQuery(['article', slug], () => getArticleQuery(slug || ''))
+
   return (
     <>
       <Navbar />
+      {article ? <ArticleBanner slug={slug} /> : <></>}
+
       <div className="article-page">
-        <div className="banner">
-          <div className="container">
-            <h1>How to build webapps that scale</h1>
-            <div className="article-meta">
-              <a href="">
-                <img src="http://i.imgur.com/Qr71crq.jpg" />
-              </a>
-              <div className="info">
-                <a
-                  href=""
-                  className="author"
-                >
-                  Eric Simons
-                </a>
-                <span className="date">January 20th</span>
-              </div>
-              <button className="btn btn-sm btn-outline-secondary">
-                <i className="ion-plus-round"></i>
-                &nbsp; Follow Eric Simons <span className="counter">(10)</span>
-              </button>
-              &nbsp;&nbsp;
-              <button className="btn btn-sm btn-outline-primary">
-                <i className="ion-heart"></i>
-                &nbsp; Favorite Post <span className="counter">(29)</span>
-              </button>
-            </div>
-          </div>
-        </div>
         <div className="container page">
-          <div className="row article-content">
-            <div className="col-md-12">
-              <p>
-                Web development technologies have evolved at an incredible clip over the past few
-                years.
-              </p>
-              <h2 id="introducing-ionic">Introducing RealWorld.</h2>
-              <p>It's a great solution for learning how other frameworks work.</p>
-            </div>
-          </div>
+          <ArticleContent slug={slug} />
+
           <hr />
-          <div className="article-actions">
-            <div className="article-meta">
-              <a href="profile.html">
-                <img src="http://i.imgur.com/Qr71crq.jpg" />
-              </a>
-              <div className="info">
-                <a
-                  href=""
-                  className="author"
-                >
-                  Eric Simons
-                </a>
-                <span className="date">January 20th</span>
-              </div>
-              <button className="btn btn-sm btn-outline-secondary">
-                <i className="ion-plus-round"></i>
-                &nbsp; Follow Eric Simons
-              </button>
-              &nbsp;
-              <button className="btn btn-sm btn-outline-primary">
-                <i className="ion-heart"></i>
-                &nbsp; Favorite Post <span className="counter">(29)</span>
-              </button>
-            </div>
-          </div>
+          <ArticleActions slug={slug} />
           <div className="row">
             <div className="col-xs-12 col-md-8 offset-md-2">
               <form className="card comment-form">
@@ -150,12 +105,6 @@ const ArticlePage = () => {
         </div>
       </div>
       <Footer />
-      {/* {data?.articles.map((article) => (
-        <div key={article.slug}>
-          <h1>{article.title}</h1>
-          <p>{article.description}</p>
-        </div>
-      ))} */}
     </>
   )
 }
