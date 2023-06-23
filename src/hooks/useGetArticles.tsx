@@ -10,7 +10,7 @@ export const useGetArticles = (params: {
   offset?: number
 }) => {
   const { data } = useQuery<GetArticlesResponse>(
-    ['article', params.author, params.tag, params.favorited, params.limit, params.offset],
+    ['articles', params.author, params.tag, params.favorited, params.limit, params.offset],
     () => getArticles(params),
     {
       onSuccess: (data) => {},

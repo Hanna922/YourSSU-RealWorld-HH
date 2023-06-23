@@ -2,7 +2,15 @@ import { Link } from 'react-router-dom'
 
 import { ArticleObject } from '@/lib/client/objects'
 
+import { useFavoriteArticle } from './hooks/useFavoriteArticles'
+
 export function ArticlePreview({ article }: { article: ArticleObject }) {
+  const {
+    favoriteArticle,
+    unfavoriteArticle,
+    isLoading: isFavoriteArticleLoading,
+  } = useFavoriteArticle(article.slug)
+
   return (
     <div className="article-preview">
       <div className="article-meta">
@@ -18,9 +26,23 @@ export function ArticlePreview({ article }: { article: ArticleObject }) {
           </Link>
           <span className="date">{article.createdAt}</span>
         </div>
-        <button className="btn btn-outline-primary btn-sm pull-xs-right">
-          <i className="ion-heart"></i> {article.favoritesCount}
-        </button>
+        {article.favorited ? (
+          <button
+            className="btn btn-primary btn-sm pull-xs-right ng-scope ng-isolate-scope"
+            onClick={() => unfavoriteArticle()}
+            disabled={isFavoriteArticleLoading}
+          >
+            <i className="ion-heart"></i>({article.favoritesCount})
+          </button>
+        ) : (
+          <button
+            className="btn btn-outline-primary btn-sm pull-xs-right"
+            onClick={() => favoriteArticle()}
+            disabled={isFavoriteArticleLoading}
+          >
+            <i className="ion-heart"></i> {article.favoritesCount}
+          </button>
+        )}
       </div>
       <Link
         to={`/article/${article.slug}`}
