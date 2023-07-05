@@ -12,8 +12,8 @@ export const useFavoriteArticle = (slug: string) => {
   const queryClient = useQueryClient()
 
   const { mutate: favoriteArticle } = useMutation(() => postArticleFavorite({ slug }), {
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(['article', slug])
+    onSuccess: (data) => {
+      queryClient.setQueryData(['article', slug], () => data.article)
     },
     onMutate: () => {
       setIsLoading(true)
@@ -23,8 +23,8 @@ export const useFavoriteArticle = (slug: string) => {
     },
   })
   const { mutate: unfavoriteArticle } = useMutation(() => deleteArticleFavorite({ slug }), {
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(['article', slug])
+    onSuccess: (data) => {
+      queryClient.setQueryData(['article', slug], () => data.article)
     },
     onMutate: () => {
       setIsLoading(true)
