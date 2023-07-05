@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
-import { getArticle, postArticle, putArticle } from '@/lib/client/endpoints/article.endpoint'
+import { putArticle } from '@/lib/client/endpoints/article.endpoint'
 
 import { getArticleQuery } from './ArticlePage/queries/getArticleQuery'
 
