@@ -1,13 +1,15 @@
-import { useQuery } from 'react-query'
-import { Link } from 'react-router-dom'
+import { useMutation, useQuery } from 'react-query'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { useUser } from '@/hooks/useUser'
 
 import { useFavoriteArticle } from '../hooks/useFavoriteArticle'
 import { useFollowUser } from '../hooks/useFollowUser'
+import { deleteArticleQuery } from '../queries/deleteArticleQuery'
 import { getArticleQuery } from '../queries/getArticleQuery'
 
 export const ArticleActions = ({ slug }: { slug: string }) => {
+  const navigate = useNavigate()
   const user = useUser()
 
   const { data: article } = useQuery(['article', slug], () => getArticleQuery(slug || ''))
@@ -16,7 +18,18 @@ export const ArticleActions = ({ slug }: { slug: string }) => {
     unfavoriteArticle,
     isLoading: isFavoriteArticleLoading,
   } = useFavoriteArticle(slug)
+
   const { followUser, unFollowUser, isLoading: isFollowUserLoading } = useFollowUser(slug)
+
+  const { mutate: deleteArticleMutate } = useMutation(deleteArticleQuery, {
+    onSuccess: () => {
+      navigate('/')
+    },
+  })
+
+  const handleDeleteCick = (slug: string) => {
+    deleteArticleMutate(slug)
+  }
 
   if (!article) {
     return <></>
@@ -46,7 +59,10 @@ export const ArticleActions = ({ slug }: { slug: string }) => {
               >
                 <i className="ion-edit"></i> Edit Article
               </Link>
-              <button className="btn btn-outline-danger btn-sm">
+              <button
+                className="btn btn-outline-danger btn-sm"
+                onClick={() => handleDeleteCick(article.slug)}
+              >
                 <i className="ion-trash-a"></i> Delete Article
               </button>
             </span>
