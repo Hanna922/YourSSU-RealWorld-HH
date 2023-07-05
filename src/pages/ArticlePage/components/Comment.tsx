@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 
+import { useUser } from '@/hooks/useUser'
 import {
   deleteArticleComment,
   postArticleComment,
@@ -14,6 +15,7 @@ interface CommentForm {
 
 export const Comment = ({ slug }: { slug: string }) => {
   const queryClient = useQueryClient()
+  const user = useUser()
 
   const { mutate: postArticleCommentMutate, isLoading } = useMutation(postArticleComment, {
     onSuccess: async () => {
@@ -65,7 +67,7 @@ export const Comment = ({ slug }: { slug: string }) => {
           </div>
           <div className="card-footer">
             <img
-              src="http://i.imgur.com/Qr71crq.jpg"
+              src={user.user?.image}
               className="comment-author-img"
             />
             <button
