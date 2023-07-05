@@ -1,23 +1,31 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
-import { useMutation } from 'react-query'
-import { useNavigate } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
-import { postArticle } from '@/lib/client/endpoints/article.endpoint'
+import { putArticle } from '@/lib/client/endpoints/article.endpoint'
+
+import { getArticleQuery } from './ArticlePage/queries/getArticleQuery'
 
 interface CreateForm {
+  slug: string
   title: string
   description: string
   body: string
   tagList: string[]
 }
 
-const CreatePage = () => {
+const EditorPage = () => {
+  const { slug: _slug } = useParams()
+  const slug: string = _slug || ''
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  const { data: article } = useQuery(['article', slug], () => getArticleQuery(slug))
   const { handleSubmit, register, setValue, getValues, watch } = useForm<CreateForm>({
     defaultValues: {
       tagList: [],
@@ -26,9 +34,19 @@ const CreatePage = () => {
   const [errorMessages, setErrorMessages] = useState<string[]>([])
   const [tagInput, setTagInput] = useState<string>('')
 
-  const { mutate, isLoading } = useMutation(postArticle, {
+  useEffect(() => {
+    if (!article) return
+    setValue('slug', article.slug)
+    setValue('title', article.title)
+    setValue('description', article.description)
+    setValue('body', article.body)
+    setValue('tagList', article.tagList)
+  }, [article, setValue])
+
+  const { mutate, isLoading } = useMutation(putArticle, {
     onSuccess: (data) => {
       setErrorMessages([])
+      queryClient.invalidateQueries(['article', data.article.slug])
       navigate(`/article/${data.article.slug}`)
     },
     onError: (error) => {
@@ -41,7 +59,10 @@ const CreatePage = () => {
   })
 
   const submit = async (data: CreateForm) => {
+    if (!slug) return
+
     mutate({
+      slug: slug,
       article: {
         title: data.title,
         description: data.description,
@@ -126,7 +147,7 @@ const CreatePage = () => {
                       readOnly={isLoading}
                     />
                     <div className="tag-list">
-                      {watch('tagList').map((tag, index) => (
+                      {watch('tagList').map((tag) => (
                         <span
                           className="tag-default tag-pill"
                           key={tag}
@@ -157,4 +178,4 @@ const CreatePage = () => {
   )
 }
 
-export default CreatePage
+export default EditorPage

@@ -1,13 +1,16 @@
 import { BrowserRouter } from 'react-router-dom'
+import { RecoilRoot } from 'recoil'
+
 import { IndexRouter } from './router'
-import { BrowserRouter } from 'react-router-dom'
 
 function App() {
   return (
     <div className="App">
-      <BrowserRouter>
-        <IndexRouter />
-      </BrowserRouter>
+      <RecoilRoot>
+        <BrowserRouter>
+          <IndexRouter />
+        </BrowserRouter>
+      </RecoilRoot>
     </div>
   )
 }

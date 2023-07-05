@@ -1,7 +1,78 @@
+import { useState } from 'react'
+
+import { useRecoilState } from 'recoil'
+
+import { ArticlePreview } from '@/components/ArticlePreview'
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
+import { Pagination } from '@/components/pagination/Pagination'
+import { useGetArticles } from '@/hooks/useGetArticles'
+import { useGetTags } from '@/hooks/useGetTags'
+import { useUser } from '@/hooks/useUser'
+import { TagObject } from '@/lib/client/objects'
+import { homePageTagState } from '@/state/homePageTag.state'
+
+function PopularTags({
+  tags,
+  switchFeedMode,
+}: {
+  tags: TagObject[]
+  switchFeedMode: (mode: 'your' | 'global' | 'tag') => void
+}) {
+  const [, setHomePageTag] = useRecoilState(homePageTagState)
+
+  const tagClickHandler = (e: React.MouseEvent<HTMLAnchorElement>, tag: string) => {
+    e.preventDefault()
+    switchFeedMode('tag')
+    setHomePageTag(tag)
+  }
+
+  return (
+    <div className="col-md-3">
+      <div className="sidebar">
+        <p>Popular Tags</p>
+
+        <div className="tag-list">
+          {tags.map((tag) => {
+            return (
+              <a
+                href=""
+                className="tag-pill tag-default"
+                key={tag}
+                onClick={(e) => tagClickHandler(e, tag)}
+              >
+                {tag}
+              </a>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const HomePage = () => {
+  const { user, isLogin } = useUser()
+  const [page, setPage] = useState(1)
+
+  const [feedMode, setFeedMode] = useState<'your' | 'global' | 'tag'>('global')
+  const { tags } = useGetTags()
+  const [selectTag, setSelectTag] = useRecoilState(homePageTagState)
+  const { articles, articlesCount } = useGetArticles({
+    limit: 10,
+    offset: (page - 1) * 10,
+    favorited: feedMode === 'your' ? user?.username : undefined,
+    tag: feedMode === 'tag' ? selectTag : undefined,
+  })
+
+  const switchFeedMode = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    mode: 'your' | 'global' | 'tag'
+  ) => {
+    e.preventDefault()
+    setFeedMode(mode)
+  }
+
   return (
     <>
       <Navbar />
@@ -18,138 +89,87 @@ const HomePage = () => {
             <div className="col-md-9">
               <div className="feed-toggle">
                 <ul className="nav nav-pills outline-active">
+                  {isLogin ? (
+                    <li className="nav-item">
+                      <a
+                        className={`nav-link ${feedMode === 'your' ? 'active' : ''}`}
+                        href=""
+                        onClick={(e) => switchFeedMode(e, 'your')}
+                      >
+                        Your Feed
+                      </a>
+                    </li>
+                  ) : (
+                    <></>
+                  )}
                   <li className="nav-item">
                     <a
-                      className="nav-link disabled"
+                      className={`nav-link ${feedMode === 'global' ? 'active' : ''}`}
                       href=""
-                    >
-                      Your Feed
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a
-                      className="nav-link active"
-                      href=""
+                      onClick={(e) => switchFeedMode(e, 'global')}
                     >
                       Global Feed
                     </a>
                   </li>
+                  {selectTag ? (
+                    <li className="nav-item">
+                      <a
+                        className={`nav-link ${feedMode === 'tag' ? 'active' : ''}`}
+                        href=""
+                        onClick={(e) => switchFeedMode(e, 'tag')}
+                      >
+                        #{selectTag}
+                      </a>
+                    </li>
+                  ) : (
+                    <></>
+                  )}
                 </ul>
               </div>
-
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a
-                      href=""
-                      className="author"
-                    >
-                      Eric Simons
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 29
-                  </button>
-                </div>
-                <a
-                  href=""
-                  className="preview-link"
-                >
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
-
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="profile.html">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                  </a>
-                  <div className="info">
-                    <a
-                      href=""
-                      className="author"
-                    >
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 32
-                  </button>
-                </div>
-                <a
-                  href=""
-                  className="preview-link"
-                >
-                  <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+              {articles ? (
+                articles.map((article) => (
+                  <ArticlePreview
+                    key={article.slug}
+                    article={{
+                      title: article.title,
+                      slug: article.slug,
+                      body: article.body,
+                      author: {
+                        bio: article.author.bio,
+                        following: article.author.following,
+                        image: article.author.image,
+                        username: article.author.username,
+                      },
+                      createdAt: article.createdAt,
+                      description: article.description,
+                      favorited: article.favorited,
+                      favoritesCount: article.favoritesCount,
+                      tagList: article.tagList,
+                      updatedAt: article.updatedAt,
+                    }}
+                  />
+                ))
+              ) : (
+                <></>
+              )}
+              {articlesCount ? (
+                <Pagination
+                  totalPages={articlesCount}
+                  limit={10}
+                  currentPage={page}
+                  setPage={setPage}
+                />
+              ) : (
+                <></>
+              )}
             </div>
-
-            <div className="col-md-3">
-              <div className="sidebar">
-                <p>Popular Tags</p>
-
-                <div className="tag-list">
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    programming
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    javascript
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    emberjs
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    angularjs
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    react
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    mean
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    node
-                  </a>
-                  <a
-                    href=""
-                    className="tag-pill tag-default"
-                  >
-                    rails
-                  </a>
-                </div>
-              </div>
-            </div>
+            <PopularTags
+              tags={tags}
+              switchFeedMode={(mode) => {
+                setFeedMode(mode)
+                setSelectTag('')
+              }}
+            />
           </div>
         </div>
       </div>

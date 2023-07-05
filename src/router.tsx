@@ -1,11 +1,13 @@
 import { Route, Routes } from 'react-router-dom'
+
+import ArticlePage from './pages/ArticlePage'
+import CreatePage from './pages/CreatePage'
+import EditorPage from './pages/EditorPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage'
-import CreatePage from './pages/CreatePage'
-import SettingsPage from './pages/SettingsPage'
-import ArticlePage from './pages/ArticlePage'
 import RegisterPage from './pages/RegisterPage'
+import SettingsPage from './pages/SettingsPage'
 
 export const IndexRouter = () => {
   return (
@@ -23,8 +25,8 @@ export const IndexRouter = () => {
         element={<RegisterPage />}
       />
       <Route
-        path="/profile"
-        element={<ProfilePage />}
+        path="/editor/:slug"
+        element={<EditorPage />}
       />
       <Route
         path="/create"
@@ -35,8 +37,12 @@ export const IndexRouter = () => {
         element={<SettingsPage />}
       />
       <Route
-        path="/article"
+        path="/article/:slug"
         element={<ArticlePage />}
+      />
+      <Route
+        path="/:userName"
+        element={<ProfilePage />}
       />
     </Routes>
   )

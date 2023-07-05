@@ -1,4 +1,4 @@
-import { Endpoint } from 'endpoint-client'
+import Client from '@/lib/client/Client'
 
 import { ProfileObject } from '../objects'
 
@@ -9,10 +9,9 @@ export type GetProfileRequest = {
 export type GetProfileResponse = {
   profile: ProfileObject
 }
-export const GetProfile: Endpoint<GetProfileRequest, GetProfileResponse> = {
-  method: 'GET',
-  path: (p) => `/api/profiles/${p.username}`,
-  pathParams: ['username'],
+
+export function getProfile({ username }: GetProfileRequest) {
+  return Client.get<GetProfileResponse>(`/api/profiles/${username}`)
 }
 
 // POST /api/profiles/:username/follow
@@ -22,10 +21,9 @@ export type PostProfileFollowRequest = {
 export type PostProfileFollowResponse = {
   profile: ProfileObject
 }
-export const PostProfileFollow: Endpoint<PostProfileFollowRequest, PostProfileFollowResponse> = {
-  method: 'POST',
-  path: (p) => `/api/profiles/${p.username}/follow`,
-  pathParams: ['username'],
+
+export function postProfileFollow({ username }: PostProfileFollowRequest) {
+  return Client.post<PostProfileFollowResponse>(`/api/profiles/${username}/follow`)
 }
 
 // DELETE /api/profiles/:username/follow
@@ -35,11 +33,7 @@ export type DeleteProfileFollowRequest = {
 export type DeleteProfileFollowResponse = {
   profile: ProfileObject
 }
-export const DeleteProfileFollow: Endpoint<
-  DeleteProfileFollowRequest,
-  DeleteProfileFollowResponse
-> = {
-  method: 'DELETE',
-  path: (p) => `/api/profiles/${p.username}/follow`,
-  pathParams: ['username'],
+
+export function deleteProfileFollow({ username }: DeleteProfileFollowRequest) {
+  return Client.delete<DeleteProfileFollowResponse>(`/api/profiles/${username}/follow`)
 }

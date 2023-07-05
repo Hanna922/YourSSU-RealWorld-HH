@@ -1,6 +1,4 @@
-import { Endpoint } from 'endpoint-client'
-
-import Client from '@/services/Client'
+import Client from '@/lib/client/Client'
 
 import { CommentObject } from '../objects'
 
@@ -27,10 +25,8 @@ export type GetArticleCommentsRequest = {
 export type GetArticleCommentsResponse = {
   comments: CommentObject[]
 }
-export const GetArticleComments: Endpoint<GetArticleCommentsRequest, GetArticleCommentsResponse> = {
-  method: 'GET',
-  path: (e) => `/api/articles/${e.slug}/comments`,
-  pathParams: ['slug'],
+export function getArticleComments({ slug }: GetArticleCommentsRequest) {
+  return Client.get<GetArticleCommentsResponse>(`/api/articles/${slug}/comments`)
 }
 
 // DELETE /api/articles/:slug/comments/:id
@@ -38,12 +34,7 @@ export type DeleteArticleCommentRequest = {
   slug: string
   id: number
 }
-export type DeleteArticleCommentResponse = {}
-export const DeleteArticleComment: Endpoint<
-  DeleteArticleCommentRequest,
-  DeleteArticleCommentResponse
-> = {
-  method: 'DELETE',
-  path: (e) => `/api/articles/${e.slug}/comments/${e.id}`,
-  pathParams: ['slug', 'id'],
+export type DeleteArticleCommentResponse = Record<string, never>
+export function deleteArticleComment({ slug, id }: DeleteArticleCommentRequest) {
+  return Client.delete<DeleteArticleCommentResponse>(`/api/articles/${slug}/comments/${id}`)
 }

@@ -1,56 +1,99 @@
+import { Link, useNavigate } from 'react-router-dom'
+
+import { useUser } from '@/hooks/useUser'
+
 export const Navbar = () => {
+  const navigate = useNavigate()
+  const { user, isLogin } = useUser()
+
   return (
     <nav className="navbar navbar-light">
       <div className="container">
-        <a
+        <Link
           className="navbar-brand"
-          href="index.html"
+          to="/"
         >
           conduit
-        </a>
+        </Link>
         <ul className="nav navbar-nav pull-xs-right">
-          <li className="nav-item">
-            <a
+          <li
+            className="nav-item"
+            onClick={() => navigate('/')}
+          >
+            <Link
               className="nav-link active"
-              href=""
+              to="/"
             >
               Home
-            </a>
+            </Link>
           </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              href=""
-            >
-              {' '}
-              <i className="ion-compose"></i>&nbsp;New Article{' '}
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              href=""
-            >
-              {' '}
-              <i className="ion-gear-a"></i>&nbsp;Settings{' '}
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              href=""
-            >
-              Sign in
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              href=""
-            >
-              Sign up
-            </a>
-          </li>
+          {isLogin ? (
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/create"
+              >
+                {' '}
+                <i className="ion-compose"></i>&nbsp;New Article{' '}
+              </Link>
+            </li>
+          ) : (
+            <></>
+          )}
+          {isLogin ? (
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/settings"
+              >
+                {' '}
+                <i className="ion-gear-a"></i>&nbsp;Settings{' '}
+              </Link>
+            </li>
+          ) : (
+            <></>
+          )}
+          {isLogin ? (
+            <></>
+          ) : (
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/login"
+              >
+                Sign in
+              </Link>
+            </li>
+          )}
+          {isLogin ? (
+            <></>
+          ) : (
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to="/register"
+              >
+                Sign up
+              </Link>
+            </li>
+          )}
+          {isLogin ? (
+            <li className="nav-item">
+              <Link
+                className="nav-link"
+                to={`/@${user?.username}`}
+              >
+                {' '}
+                <img
+                  className="user-pic"
+                  src={user?.image}
+                />
+                {user?.username}
+              </Link>
+            </li>
+          ) : (
+            <></>
+          )}
         </ul>
       </div>
     </nav>

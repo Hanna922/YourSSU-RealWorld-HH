@@ -1,32 +1,90 @@
+import { useState } from 'react'
+
+import { useQuery } from 'react-query'
+import { Link, useParams } from 'react-router-dom'
+
+import { ArticlePreview } from '@/components/ArticlePreview'
 import { Footer } from '@/components/Footer'
 import { Navbar } from '@/components/Navbar'
+import { Pagination } from '@/components/pagination/Pagination'
+import { useGetArticles } from '@/hooks/useGetArticles'
+import { useUser } from '@/hooks/useUser'
+import { getProfile } from '@/lib/client/endpoints/profile.endpoint'
+import { ProfileObject } from '@/lib/client/objects'
+
+const getProfileQuery = async (username: string) => {
+  const res = await getProfile({
+    username,
+  })
+  return res.profile
+}
+
+const UserInfo = ({ profile }: { profile: ProfileObject }) => {
+  const { user } = useUser({ needLogin: false })
+
+  return (
+    <div className="user-info">
+      <div className="container">
+        <div className="row">
+          <div className="col-xs-12 col-md-10 offset-md-1">
+            <img
+              src={profile.image}
+              className="user-img"
+            />
+            <h4>{profile.username}</h4>
+            <p>{profile.bio}</p>
+            {user?.username === profile.username ? (
+              <Link
+                className="btn btn-sm btn-outline-secondary action-btn"
+                to="/settings"
+              >
+                <i className="ion-plus-round"></i>
+                &nbsp; Edit Profile Settings
+              </Link>
+            ) : (
+              <a className="btn btn-sm btn-outline-secondary action-btn">
+                <i className="ion-plus-round"></i>
+                &nbsp; Follow {profile.username}
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const ProfilePage = () => {
+  const { userName: _userName } = useParams()
+  const userName = (_userName as string).replace('@', '')
+  const { data: profile } = useQuery(['profile', userName], () => getProfileQuery(userName), {
+    initialData: {
+      username: '',
+      bio: '',
+      image: 'https://api.realworld.io/images/smiley-cyrus.jpeg',
+      following: false,
+    },
+  })
+
+  const [articleMode, setArticleMode] = useState<'my' | 'favorited'>('my')
+  const switchArticleMode = (e: React.MouseEvent<HTMLAnchorElement>, mode: 'my' | 'favorited') => {
+    e.preventDefault()
+    setArticleMode(mode)
+  }
+
+  const [page, setPage] = useState(1)
+  const { articles, articlesCount } = useGetArticles({
+    author: articleMode === 'my' ? userName : undefined,
+    favorited: articleMode === 'favorited' ? userName : undefined,
+    limit: 5,
+    offset: (page - 1) * 5,
+  })
+
   return (
     <>
       <Navbar />
       <div className="profile-page">
-        <div className="user-info">
-          <div className="container">
-            <div className="row">
-              <div className="col-xs-12 col-md-10 offset-md-1">
-                <img
-                  src="http://i.imgur.com/Qr71crq.jpg"
-                  className="user-img"
-                />
-                <h4>Eric Simons</h4>
-                <p>
-                  Cofounder @GoThinkster, lived in Aol's HQ for a few months, kinda looks like Peeta
-                  from the Hunger Games
-                </p>
-                <button className="btn btn-sm btn-outline-secondary action-btn">
-                  <i className="ion-plus-round"></i>
-                  &nbsp; Follow Eric Simons
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        {profile ? <UserInfo profile={profile} /> : <></>}
 
         <div className="container">
           <div className="row">
@@ -35,16 +93,18 @@ const ProfilePage = () => {
                 <ul className="nav nav-pills outline-active">
                   <li className="nav-item">
                     <a
-                      className="nav-link active"
+                      className={`nav-link ${articleMode === 'my' ? 'active' : ''}`}
                       href=""
+                      onClick={(e) => switchArticleMode(e, 'my')}
                     >
                       My Articles
                     </a>
                   </li>
                   <li className="nav-item">
                     <a
-                      className="nav-link"
+                      className={`nav-link ${articleMode === 'favorited' ? 'active' : ''}`}
                       href=""
+                      onClick={(e) => switchArticleMode(e, 'favorited')}
                     >
                       Favorited Articles
                     </a>
@@ -52,65 +112,20 @@ const ProfilePage = () => {
                 </ul>
               </div>
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a
-                      href=""
-                      className="author"
-                    >
-                      Eric Simons
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 29
-                  </button>
-                </div>
-                <a
-                  href=""
-                  className="preview-link"
-                >
-                  <h1>How to build webapps that scale</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                </a>
-              </div>
+              {articles &&
+                articles.map((article) => (
+                  <ArticlePreview
+                    key={article.slug}
+                    article={article}
+                  />
+                ))}
 
-              <div className="article-preview">
-                <div className="article-meta">
-                  <a href="">
-                    <img src="http://i.imgur.com/N4VcUeJ.jpg" />
-                  </a>
-                  <div className="info">
-                    <a
-                      href=""
-                      className="author"
-                    >
-                      Albert Pai
-                    </a>
-                    <span className="date">January 20th</span>
-                  </div>
-                  <button className="btn btn-outline-primary btn-sm pull-xs-right">
-                    <i className="ion-heart"></i> 32
-                  </button>
-                </div>
-                <a
-                  href=""
-                  className="preview-link"
-                >
-                  <h1>The song you won't ever stop singing. No matter how hard you try.</h1>
-                  <p>This is the description for the post.</p>
-                  <span>Read more...</span>
-                  <ul className="tag-list">
-                    <li className="tag-default tag-pill tag-outline">Music</li>
-                    <li className="tag-default tag-pill tag-outline">Song</li>
-                  </ul>
-                </a>
-              </div>
+              <Pagination
+                currentPage={page}
+                totalPages={Math.floor(articlesCount || 0 / 5) + 1}
+                setPage={setPage}
+                limit={5}
+              />
             </div>
           </div>
         </div>

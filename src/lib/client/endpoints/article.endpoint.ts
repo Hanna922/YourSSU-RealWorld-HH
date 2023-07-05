@@ -1,6 +1,4 @@
-import { Endpoint } from 'endpoint-client'
-
-import Client from '@/services/Client'
+import Client from '@/lib/client/Client'
 
 import { ArticleObject } from '../objects'
 
@@ -30,10 +28,9 @@ export type GetArticleFeedResponse = {
   articles: ArticleObject[]
   articlesCount: number
 }
-export const GetArticleFeed: Endpoint<GetArticleFeedRequest, GetArticleFeedResponse> = {
-  method: 'GET',
-  path: '/api/articles/feed',
-  queryParams: ['limit', 'offset'],
+
+export function getArticleFeed(params: GetArticleFeedRequest) {
+  return Client.get<GetArticleFeedResponse>('/api/articles/feed', { params })
 }
 
 // GET /api/articles/:slug
@@ -43,10 +40,9 @@ export type GetArticleRequest = {
 export type GetArticleResponse = {
   article: ArticleObject
 }
-export const GetArticle: Endpoint<GetArticleRequest, GetArticleResponse> = {
-  method: 'GET',
-  path: '/api/articles/:slug',
-  pathParams: ['slug'],
+
+export function getArticle({ slug }: GetArticleRequest) {
+  return Client.get<GetArticleResponse>(`/api/articles/${slug}`)
 }
 
 // POST /api/articles
@@ -61,10 +57,9 @@ export type PostArticleRequest = {
 export type PostArticleResponse = {
   article: ArticleObject
 }
-export const PostArticle: Endpoint<PostArticleRequest, PostArticleResponse> = {
-  method: 'POST',
-  path: '/api/articles',
-  bodyParams: ['article'],
+
+export function postArticle({ article }: PostArticleRequest) {
+  return Client.post<PostArticleResponse>('/api/articles', { article })
 }
 
 // PUT /api/articles/:slug
@@ -74,25 +69,23 @@ export type PutArticleRequest = {
     title?: string
     description?: string
     body?: string
+    tagList?: string[]
   }
 }
 export type PutArticleResponse = {
   article: ArticleObject
 }
-export const PutArticle: Endpoint<PutArticleRequest, PutArticleResponse> = {
-  method: 'PUT',
-  path: (e) => `/api/articles/${e.slug}`,
-  pathParams: ['slug'],
-  bodyParams: ['article'],
+
+export function putArticle({ slug, article }: PutArticleRequest) {
+  return Client.put<PutArticleResponse>(`/api/articles/${slug}`, { article })
 }
 
 // DELETE /api/articles/:slug
 export type DeleteArticleRequest = {
   slug: string
 }
-export type DeleteArticleResponse = {}
-export const DeleteArticle: Endpoint<DeleteArticleRequest, DeleteArticleResponse> = {
-  method: 'DELETE',
-  path: (e) => `/api/articles/${e.slug}`,
-  pathParams: ['slug'],
+export type DeleteArticleResponse = Record<string, never>
+
+export function deleteArticle({ slug }: DeleteArticleRequest) {
+  return Client.delete<DeleteArticleResponse>(`/api/articles/${slug}`)
 }
