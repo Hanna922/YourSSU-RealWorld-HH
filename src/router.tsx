@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 
 import ArticlePage from './pages/ArticlePage'
 import CreatePage from './pages/CreatePage'
+import EditorPage from './pages/EditorPage'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import ProfilePage from './pages/ProfilePage'
@@ -22,6 +23,10 @@ export const IndexRouter = () => {
       <Route
         path="/register"
         element={<RegisterPage />}
+      />
+      <Route
+        path="/editor/:slug"
+        element={<EditorPage />}
       />
       <Route
         path="/create"
