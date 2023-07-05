@@ -6,6 +6,7 @@ import {
   deleteArticleFavorite,
   postArticleFavorite,
 } from '@/lib/client/endpoints/article.favorite.endpoint'
+import { ArticleObject } from '@/lib/client/objects'
 
 export const useFavoriteArticle = (slug: string) => {
   const [isLoading, setIsLoading] = useState(false)
@@ -17,9 +18,30 @@ export const useFavoriteArticle = (slug: string) => {
     },
     onMutate: () => {
       setIsLoading(true)
+
+      const oldData = queryClient.getQueryData<ArticleObject>(['article', slug])
+      if (!oldData) return
+
+      queryClient.setQueryData(['article', slug], () => ({
+        ...oldData,
+        favorited: true,
+        favoritesCount: oldData.favoritesCount + 1,
+      }))
+      return {
+        rollback: () => {
+          queryClient.setQueryData(['article', slug], () => ({
+            ...oldData,
+            favorited: false,
+            favoritesCount: oldData.favoritesCount,
+          }))
+        },
+      }
     },
     onSettled: async () => {
       setIsLoading(false)
+    },
+    onError(err, value, context) {
+      context?.rollback()
     },
   })
   const { mutate: unfavoriteArticle } = useMutation(() => deleteArticleFavorite({ slug }), {
@@ -28,9 +50,30 @@ export const useFavoriteArticle = (slug: string) => {
     },
     onMutate: () => {
       setIsLoading(true)
+
+      const oldData = queryClient.getQueryData<ArticleObject>(['article', slug])
+      if (!oldData) return
+
+      queryClient.setQueryData(['article', slug], () => ({
+        ...oldData,
+        favorited: false,
+        favoritesCount: oldData.favoritesCount - 1,
+      }))
+      return {
+        rollback: () => {
+          queryClient.setQueryData(['article', slug], () => ({
+            ...oldData,
+            favorited: true,
+            favoritesCount: oldData.favoritesCount,
+          }))
+        },
+      }
     },
     onSettled: async () => {
       setIsLoading(false)
+    },
+    onError(err, value, context) {
+      context?.rollback()
     },
   })
 
